@@ -55,4 +55,6 @@ bun index.ts
 
 The application should now be running and ready for development or testing.
 
+more information one-one one-many many-many [READ HERE](https://sequelize.org/docs/v6/other-topics/typescript/#the-case-of-modelinit)
+
 ---
