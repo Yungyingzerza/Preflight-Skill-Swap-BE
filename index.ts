@@ -3,12 +3,12 @@ import cookieParser from "cookie-parser";
 import cors from "cors";
 import dotenv from "dotenv";
 import { connect, sync } from './config/database';
+import { app } from "./socket/socket";
 dotenv.config();
 
 //import routes
 import authRouter from "./controllers/auth.routes";
-
-const app = express();
+import chatRouter from "./controllers/chat.routes";
 
 //setup middlewares
 app.use(cookieParser());
@@ -37,6 +37,7 @@ app.get("/", (req, res) => {
 });
 
 app.use('/auth', authRouter);
+app.use('/chat', chatRouter);
 //-=-=-=-=-should edit above this line to add your routes-=-=-=-=-//
 
 app.listen(process.env.PORT, () => {
