@@ -6,6 +6,8 @@ import {
     CreationOptional,
 } from 'sequelize';
 import { sequelize } from '../config/database';
+import User from './user';
+import Skill from './skill';
 
 class UserSkill extends Model<
     InferAttributes<UserSkill>,
@@ -28,10 +30,18 @@ UserSkill.init(
         user_id: {
             type: DataTypes.STRING,
             allowNull: false,
+            references: {
+                model: User, // Assuming you have a User model
+                key: 'id',
+            },
         },
         skill_id: {
             type: DataTypes.STRING,
             allowNull: false,
+            references: {
+                model: Skill, // Assuming you have a Skill model
+                key: 'id',
+            },
         },
         createdAt: {
             type: DataTypes.DATE,

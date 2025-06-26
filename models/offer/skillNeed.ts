@@ -6,13 +6,15 @@ import {
     Model,
 } from 'sequelize';
 import { sequelize } from '../../config/database';
+import Offer from './offer';
+import Skill from '../skill';
 
 class SkillNeed extends Model<
     InferAttributes<SkillNeed>,
     InferCreationAttributes<SkillNeed>
 > {
     declare id: CreationOptional<string>; //PK
-    declare req_id: string; // FK: offer.req_user_id & offer.res_user_id
+    declare req_id: string; // FK: offer.req_user_id or offer.res_user_id
     declare skill_id: string; // FK: skill.id
     declare createdAt: CreationOptional<Date>;
     declare updatedAt: CreationOptional<Date>;
@@ -28,10 +30,18 @@ SkillNeed.init(
         req_id: {
             type: DataTypes.STRING,
             allowNull: false,
+            references: {
+                model: Offer, 
+                key: 'req_user_id',
+            },
         },
         skill_id: {
             type: DataTypes.STRING,
             allowNull: false,
+            references: {
+                model: Skill, 
+                key: 'id',
+            },
         },
         createdAt: {
             type: DataTypes.DATE,

@@ -6,6 +6,8 @@ import {
     Model,
 } from 'sequelize';
 import { sequelize } from '../../config/database';
+import User from '../user';
+import Status from './status';
 
 class Offer extends Model<
     InferAttributes<Offer>,
@@ -31,6 +33,10 @@ Offer.init(
         req_user_id: {
             type: DataTypes.STRING,
             allowNull: false,
+            references: {
+                model: User,
+                key: 'id',
+            },
         },
         req_skill_need_id: {
             type: DataTypes.STRING,
@@ -39,6 +45,10 @@ Offer.init(
         res_user_id: {
             type: DataTypes.STRING,
             allowNull: false,
+            references: {
+                model: User,
+                key: 'id',
+            },
         },
         res_skill_need_id: {
             type: DataTypes.STRING,
@@ -47,6 +57,10 @@ Offer.init(
         status_id: {
             type: DataTypes.STRING,
             allowNull: true, // Optional, can be null if not set
+            references: {
+                model: Status,
+                key: 'id',
+            },
         },
         createdAt: {
             type: DataTypes.DATE,
