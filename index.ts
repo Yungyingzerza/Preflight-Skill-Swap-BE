@@ -2,7 +2,7 @@ import express from "express";
 import cookieParser from "cookie-parser";
 import cors from "cors";
 import dotenv from "dotenv";
-import { connect, sync } from './config/database';
+import { connect, sync } from "./config/database";
 import { app } from "./socket/socket";
 dotenv.config();
 
@@ -23,21 +23,21 @@ app.use(express.json({ limit: "100mb" }));
 
 // Connect to the database
 async function initializeDatabase() {
-    await connect();
-    await sync();
-  }
+  await connect();
+  await sync();
+}
 initializeDatabase();
 
 //list of routes
 //-=-=-=-should edit below this line to add your routes-=-=-=-=-//
 app.get("/", (req, res) => {
   res.json({
-    version: "1.0.0",
+    version: "1.0.1",
   });
 });
 
-app.use('/auth', authRouter);
-app.use('/chat', chatRouter);
+app.use("/auth", authRouter);
+app.use("/chat", chatRouter);
 //-=-=-=-=-should edit above this line to add your routes-=-=-=-=-//
 
 app.listen(process.env.PORT, () => {
