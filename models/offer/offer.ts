@@ -8,7 +8,6 @@ import {
 import { sequelize } from "../../config/database";
 import User from "../user";
 import Status from "./status";
-import SkillNeed from "./skillNeed";
 
 class Offer extends Model<
   InferAttributes<Offer>,
@@ -16,9 +15,9 @@ class Offer extends Model<
 > {
   declare id: CreationOptional<string>; // PK
   declare req_user_id: string; // FK: user.id
-  declare req_skill_need_id: string;
+  declare req_skill_need_id: CreationOptional<string>;
   declare res_user_id: string; // FK: user.id
-  declare res_skill_need_id: string;
+  declare res_skill_need_id: CreationOptional<string>;
   declare status_id: CreationOptional<string>; // FK: status.id
   declare createdAt: CreationOptional<Date>;
   declare updatedAt: CreationOptional<Date>;
@@ -42,10 +41,7 @@ Offer.init(
     req_skill_need_id: {
       type: DataTypes.UUID,
       allowNull: false,
-      references: {
-        model: SkillNeed,
-        key: "skill_need_id",
-      },
+      defaultValue: DataTypes.UUIDV4, // Assuming this is a UUID for the skill need
     },
     res_user_id: {
       type: DataTypes.UUID,
@@ -58,10 +54,7 @@ Offer.init(
     res_skill_need_id: {
       type: DataTypes.UUID,
       allowNull: false,
-      references: {
-        model: SkillNeed,
-        key: "skill_need_id",
-      },
+      defaultValue: DataTypes.UUIDV4, // Assuming this is a UUID for the skill need
     },
     status_id: {
       type: DataTypes.UUID,
@@ -111,22 +104,6 @@ Status.hasMany(Offer, {
 
 Offer.belongsTo(Status, {
   foreignKey: "status_id",
-});
-
-SkillNeed.hasMany(Offer, {
-  foreignKey: "req_skill_need_id",
-});
-
-SkillNeed.hasMany(Offer, {
-  foreignKey: "res_skill_need_id",
-});
-
-Offer.belongsTo(SkillNeed, {
-  foreignKey: "req_skill_need_id",
-});
-
-Offer.belongsTo(SkillNeed, {
-  foreignKey: "res_skill_need_id",
 });
 
 export default Offer;
