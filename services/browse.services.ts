@@ -90,6 +90,11 @@ const requestSwap = async (req: Request, res: Response) => {
 
             // Validate the target user ID and skill ID
             const { targetUserId, skillId } = req.body;
+            // cant request swap with yourself
+            if (userId === targetUserId) {
+                return res.status(400).json({ message: 'You cannot request a swap with yourself' });
+            }
+
             // Check if the target user exists
             const targetUser = await User.findByPk(targetUserId);
             if (!targetUser) {
