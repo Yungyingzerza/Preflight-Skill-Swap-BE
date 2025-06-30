@@ -9,6 +9,7 @@ dotenv.config();
 //import routes
 import authRouter from "./controllers/auth.routes";
 import chatRouter from "./controllers/chat.routes";
+import browseRouter from "./controllers/browse.routes";
 
 //setup middlewares
 app.use(cookieParser());
@@ -32,12 +33,13 @@ initializeDatabase();
 //-=-=-=-should edit below this line to add your routes-=-=-=-=-//
 app.get("/", (req, res) => {
   res.json({
-    version: "1.0.1",
+    version: "1.0.2",
   });
 });
 
 app.use("/auth", authRouter);
 app.use("/chat", chatRouter);
+app.use("/browse", browseRouter);
 //-=-=-=-=-should edit above this line to add your routes-=-=-=-=-//
 
 app.listen(process.env.PORT, () => {
