@@ -33,7 +33,7 @@ initializeDatabase();
 //-=-=-=-should edit below this line to add your routes-=-=-=-=-//
 app.get("/", (req, res) => {
   res.json({
-    version: "1.0.2",
+    version: "1.0.3",
   });
 });
 
