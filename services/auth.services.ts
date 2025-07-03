@@ -4,6 +4,7 @@ import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
 //import type
 import { Request, Response } from "express";
+import { decodedType } from "../types/decodedType";
 dotenv.config();
 
 async function register(req: Request, res: Response) {
@@ -39,7 +40,7 @@ async function register(req: Request, res: Response) {
       return res
         .cookie("whoami", token, {
           httpOnly: true,
-          sameSite: process.env.IS_STAGING === "true" ? "none" : "lax",
+          sameSite: "lax",
           secure: process.env.NODE_ENV === "production",
           maxAge: 1000 * 60 * 60 * 24 * 365,
         })
@@ -75,13 +76,17 @@ async function login(req: Request, res: Response) {
     if (user) {
       const isPasswordMatch = await bcrypt.compare(password, user.password);
       if (isPasswordMatch) {
-        const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET as string, {
-          expiresIn: "1y",
-        });
+        const token = jwt.sign(
+          { id: user.id },
+          process.env.JWT_SECRET as string,
+          {
+            expiresIn: "1y",
+          }
+        );
         return res
           .cookie("whoami", token, {
             httpOnly: true,
-            sameSite: process.env.IS_STAGING === "true" ? "none" : "lax",
+            sameSite: "lax",
             secure: process.env.NODE_ENV === "production",
             maxAge: 1000 * 60 * 60 * 24 * 365,
           })
@@ -112,4 +117,30 @@ async function logout(req: Request, res: Response) {
   }
 }
 
-export { register, login, logout };
+async function isAuth(req: Request, res: Response) {
+  try {
+    const token = req.cookies.whoami;
+    if (!token) {
+      return res.status(401).json({ message: "Unauthorized!" });
+    }
+
+    const decoded = jwt.verify(token, process.env.JWT_SECRET as string);
+    const user = await User.findByPk((decoded as decodedType).id);
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found!" });
+    }
+
+    return res.json({
+      id: user.id,
+      email: user.email,
+      firstname: user.firstname,
+      lastname: user.lastname,
+      picture_url: user.picture_url,
+    });
+  } catch (error) {
+    return res.status(500).json({ message: "Something went wrong!" });
+  }
+}
+
+export { register, login, logout, isAuth };
