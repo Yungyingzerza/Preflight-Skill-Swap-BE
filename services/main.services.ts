@@ -4,6 +4,7 @@ import { Op } from "sequelize";
 import { Request, Response } from "express";
 import { decodedType } from '../types/decodedType';
 import UserSkill from "../models/userSkill";
+import UserSkillLearn from "../models/userSkillLearn";
 import User from "../models/user";
 import Skill from "../models/skill";
 import SkillNeed from "../models/offer/skillNeed";
@@ -103,6 +104,31 @@ async function getUserSkills(req: Request, res: Response) {
     }
 }
 
+async function getUserSkillsLearn(req: Request, res: Response) {
+    try {
+        if (!req.cookies.whoami) {
+            return res.status(401).json({ message: 'Unauthorized' });
+        }
+
+        const decoded = jwt.verify(req.cookies.whoami, process.env.JWT_SECRET as string);
+        const userId = (decoded as decodedType).id;
+
+        const userSkillsLearn = await UserSkillLearn.findAll({
+            where: { user_id: userId },
+            include: [
+                {
+                    model: Skill,
+                    attributes: ['id', 'name'],
+                }
+            ],
+        });
+
+        return res.status(200).json(userSkillsLearn);
+    } catch (error) {
+        return res.status(500).json({ message: 'Internal server error' });
+    }
+}
+
 async function editUserSkills(req: Request, res: Response) {
     try {
         if (!req.cookies.whoami) {
@@ -130,6 +156,38 @@ async function editUserSkills(req: Request, res: Response) {
         await UserSkill.bulkCreate(userSkills);
 
         return res.status(200).json({ message: 'User skills updated successfully' });
+    } catch (error) {
+        return res.status(500).json({ message: 'Internal server error' });
+    }
+}
+
+async function editUserSkillsLearn(req: Request, res: Response) {
+    try {
+        if (!req.cookies.whoami) {
+            return res.status(401).json({ message: 'Unauthorized' });
+        }
+
+        const decoded = jwt.verify(req.cookies.whoami, process.env.JWT_SECRET as string);
+        const userId = (decoded as decodedType).id;
+
+        const { skills } = req.body;
+
+        if (!skills || !Array.isArray(skills)) {
+            return res.status(400).json({ message: 'Invalid skills data' });
+        }
+
+        // Clear existing skills
+        await UserSkillLearn.destroy({ where: { user_id: userId } });
+
+        // Add new skills
+        const userSkillsLearn = skills.map(skill => ({
+            user_id: userId,
+            skill_id: skill.id
+        }));
+
+        await UserSkillLearn.bulkCreate(userSkillsLearn);
+
+        return res.status(200).json({ message: 'User skills learn updated successfully' });
     } catch (error) {
         return res.status(500).json({ message: 'Internal server error' });
     }
@@ -200,8 +258,10 @@ async function getSwapHistory(req: Request, res: Response) {
 
 export {
     editUserProfile,
+    getUserSkillsLearn,
     getNumberOfUserSkills,
     getUserSkills,
     editUserSkills,
+    editUserSkillsLearn,
     getSwapHistory
 };
