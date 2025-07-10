@@ -4,6 +4,7 @@ import { Op } from "sequelize";
 import { Request, Response } from "express";
 import { decodedType } from '../types/decodedType';
 import UserSkill from "../models/userSkill";
+import UserSkillLearn from "../models/userSkillLearn";
 import User from "../models/user";
 import Skill from "../models/skill";
 import SkillNeed from "../models/offer/skillNeed";
@@ -154,7 +155,59 @@ const requestSwap = async (req: Request, res: Response) => {
     }
 };
 
+async function getTargetUserData(req: Request, res: Response) {
+    try {
+        if (!req.cookies.whoami) {
+            return res.status(401).json({ message: 'Unauthorized' });
+        }
+
+        const decoded = jwt.verify(req.cookies.whoami, process.env.JWT_SECRET as string);
+        const userId = (decoded as decodedType).id;
+
+        const { targetUserId } = req.body;
+        
+        if (!targetUserId) {
+            return res.status(400).json({ message: 'Missing required fields' });
+        }
+
+        // Fetch user data, user skill, user skill learn
+        const userData = await User.findOne({
+            where: { id: targetUserId },
+            attributes: ['id', 'firstname', 'lastname', 'bio', 'picture_url'],
+            include: [
+                {
+                    model: UserSkill,
+                    attributes: ['skill_id'],
+                    include: [{
+                        model: Skill,
+                        attributes: ['id', 'name']
+                    }]
+                },
+                {
+                    model: UserSkillLearn,
+                    attributes: ['skill_id'],
+                    include: [{
+                        model: Skill,
+                        attributes: ['id', 'name']
+                    }]
+                }
+            ]
+        });
+
+        if (!userData) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+
+        return res.status(200).json(userData);
+
+    } catch (err) {
+        return res.status(500).json({ message: 'Internal server error' });
+    }
+}
+    
+
 export {
     search,
-    requestSwap
+    requestSwap,
+    getTargetUserData
 };
