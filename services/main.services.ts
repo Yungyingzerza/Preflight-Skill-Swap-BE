@@ -9,6 +9,7 @@ import User from "../models/user";
 import Skill from "../models/skill";
 import SkillNeed from "../models/offer/skillNeed";
 import Offer from "../models/offer/offer";
+import Status from "../models/offer/status";
 
 dotenv.config();
 
@@ -208,7 +209,13 @@ async function getSwapHistory(req: Request, res: Response) {
                     { req_user_id: userId},
                     { res_user_id: userId}
                 ]
-            }
+            },
+            include: [
+                {
+                    model: Status,
+                    attributes: ['id', 'name']
+                }
+            ]
         });
         const swapHistory = await Promise.all(swapOffers.map(async (offer) => {
             const partnerUserId = offer.req_user_id === userId ? offer.res_user_id : offer.req_user_id;
