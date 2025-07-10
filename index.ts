@@ -12,6 +12,7 @@ import chatRouter from "./controllers/chat.routes";
 import browseRouter from "./controllers/browse.routes";
 import mainRouter from "./controllers/main.routes";
 import requestRouter from "./controllers/request.routes";
+import skillRouter from "./controllers/skill.routes";
 
 //setup middlewares
 app.use(cookieParser());
@@ -39,7 +40,7 @@ initializeDatabase();
 //-=-=-=-should edit below this line to add your routes-=-=-=-=-//
 app.get("/", (req, res) => {
   res.json({
-    version: "1.0.5",
+    version: "1.0.6",
   });
 });
 
@@ -48,6 +49,7 @@ app.use("/chat", chatRouter);
 app.use("/browse", browseRouter);
 app.use("/main", mainRouter);
 app.use("/request", requestRouter);
+app.use("/skill", skillRouter);
 //-=-=-=-=-should edit above this line to add your routes-=-=-=-=-//
 
 app.listen(process.env.PORT, () => {
