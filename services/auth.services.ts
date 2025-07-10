@@ -52,6 +52,7 @@ async function register(req: Request, res: Response) {
           firstname: user.firstname,
           lastname: user.lastname,
           picture_url: user.picture_url,
+          bio: user.bio,
         });
     } else {
       return res.status(400).json({ message: "Failed to create user!" });
@@ -97,6 +98,7 @@ async function login(req: Request, res: Response) {
             firstname: user.firstname,
             lastname: user.lastname,
             picture_url: user.picture_url,
+            bio: user.bio,
           });
       } else {
         return res.status(401).json({ message: "Invalid credentials!" });
@@ -137,6 +139,7 @@ async function isAuth(req: Request, res: Response) {
       firstname: user.firstname,
       lastname: user.lastname,
       picture_url: user.picture_url,
+      bio: user.bio,
     });
   } catch (error) {
     return res.status(500).json({ message: "Something went wrong!" });
