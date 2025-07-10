@@ -17,6 +17,7 @@ class User extends Model<
   declare password: string;
   declare firstname: string;
   declare lastname: string;
+  declare bio: CreationOptional<string>;
   declare picture_url: CreationOptional<string>;
 
   // Optional: If you're using timestamps
@@ -48,6 +49,10 @@ User.init(
     lastname: {
       type: DataTypes.STRING,
       allowNull: false,
+    },
+    bio:{
+      type: DataTypes.TEXT,
+      allowNull: true,
     },
     picture_url: {
       type: DataTypes.TEXT,

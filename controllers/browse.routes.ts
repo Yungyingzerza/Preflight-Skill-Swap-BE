@@ -11,4 +11,8 @@ router.post("/request-swap", async (req, res) => {
     await services.requestSwap(req, res);
 });
 
+router.post("/get-target-user-data", async (req, res) => {
+    await services.getTargetUserData(req, res);
+});
+
 export default router;
