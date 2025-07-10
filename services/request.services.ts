@@ -64,8 +64,38 @@ async function getPendingOffers(req: Request, res: Response) {
             };
         }));
 
-        return res.status(200).json(offersWithUserData);
+        // count accepted offers
+        const acceptedOffersCount = await Offer.count({
+            where: {
+                res_user_id: userId,
+                status_id: '08b487ba-38e1-4870-a02c-3bfff0643d61'
+            }
+        });
+
+        // count completed offers
+        const completedOffersCount = await Offer.count({
+            where: {
+                res_user_id: userId,
+                status_id: 'f3813160-560e-44fa-94a7-3b1fdf730ad2'
+            }
+        });
+
+        // count rejected offers
+        const rejectedOffersCount = await Offer.count({
+            where: {
+                res_user_id: userId,
+                status_id: '21821f01-5c3e-4631-b707-c49ffb7811c6'
+            }
+        });
+
+        return res.status(200).json({
+            pendingOffers: offersWithUserData,
+            acceptedOffersCount,
+            completedOffersCount,
+            rejectedOffersCount
+        });
     } catch (error) {
+        console.error(error);
         return res.status(500).json({ message: 'Internal server error' });
     }
 }
