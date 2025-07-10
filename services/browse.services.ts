@@ -1,7 +1,6 @@
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
-import { Op, Sequelize } from "sequelize";
-import { getSocketId, io } from "../socket/socket";
+import { Op } from "sequelize";
 import { Request, Response } from "express";
 import { decodedType } from '../types/decodedType';
 import UserSkill from "../models/userSkill";
@@ -9,7 +8,6 @@ import User from "../models/user";
 import Skill from "../models/skill";
 import SkillNeed from "../models/offer/skillNeed";
 import Offer from "../models/offer/offer";
-import Status from "../models/offer/status";
 
 dotenv.config();
 
@@ -135,7 +133,7 @@ const requestSwap = async (req: Request, res: Response) => {
             const newOffer = await Offer.create({
                 req_user_id: userId,
                 res_user_id: targetUserId,
-                status_id: 'c6513017-a144-45ad-8188-b1f89fd1aa6a'
+                status_id: 'c6513017-a144-45ad-8188-b1f89fd1aa6a' // 'Pending' status ID
             });
             
             // Create skill needs for requested user
