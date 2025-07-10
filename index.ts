@@ -11,6 +11,7 @@ import authRouter from "./controllers/auth.routes";
 import chatRouter from "./controllers/chat.routes";
 import browseRouter from "./controllers/browse.routes";
 import mainRouter from "./controllers/main.routes";
+import requestRouter from "./controllers/request.routes";
 
 //setup middlewares
 app.use(cookieParser());
@@ -46,6 +47,7 @@ app.use("/auth", authRouter);
 app.use("/chat", chatRouter);
 app.use("/browse", browseRouter);
 app.use("/main", mainRouter);
+app.use("/request", requestRouter);
 //-=-=-=-=-should edit above this line to add your routes-=-=-=-=-//
 
 app.listen(process.env.PORT, () => {
