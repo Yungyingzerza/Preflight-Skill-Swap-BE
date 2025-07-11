@@ -40,7 +40,7 @@ initializeDatabase();
 //-=-=-=-should edit below this line to add your routes-=-=-=-=-//
 app.get("/", (req, res) => {
   res.json({
-    version: "1.0.6",
+    version: "1.1.0",
   });
 });
 
