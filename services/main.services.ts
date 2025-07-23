@@ -45,7 +45,14 @@ async function editUserProfile(req: Request, res: Response) {
 
     return res
       .status(200)
-      .json({ message: "Profile updated successfully", user });
+      .json({
+        message: "Profile updated successfully",
+        id: user.id,
+        firstname: user.firstname,
+        lastname: user.lastname,
+        bio: user.bio,
+        picture_url: user.picture_url,
+      });
   } catch (error) {
     return res.status(401).json({ message: "Unauthorized" });
   }
