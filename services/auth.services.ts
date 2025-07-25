@@ -40,7 +40,7 @@ async function register(req: Request, res: Response) {
       return res
         .cookie("whoami", token, {
           httpOnly: true,
-          sameSite: "lax",
+          sameSite: "none",
           secure: process.env.NODE_ENV === "production",
           maxAge: 1000 * 60 * 60 * 24 * 365,
         })
@@ -87,7 +87,7 @@ async function login(req: Request, res: Response) {
         return res
           .cookie("whoami", token, {
             httpOnly: true,
-            sameSite: "lax",
+            sameSite: "none",
             secure: process.env.NODE_ENV === "production",
             maxAge: 1000 * 60 * 60 * 24 * 365,
           })
