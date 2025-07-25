@@ -25,6 +25,7 @@ app.use(
       "http://localhost:5173",
       "http://127.0.0.1:5173",
       "https://skillswap.yungying.com",
+      "https://fs-g03.iecmu.com",
     ],
     methods: ["GET", "POST", "PATCH", "DELETE"],
     credentials: true,
